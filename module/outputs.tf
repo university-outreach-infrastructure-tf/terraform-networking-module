@@ -27,17 +27,7 @@ output "default_db_subnet_group" {
   value = "${aws_db_subnet_group.default.id}"
 }
 
-// The list of EIPs associated with the private subnets.
-output "private_nat_ips" {
-  value = ["${aws_eip.nat.*.public_ip}"]
-}
-
-// The private route table ID.
-output "private_rtb_id" {
-  value = "${join(",", aws_route_table.private.*.id)}"
-}
-
 // The public route table ID.
 output "public_rtb_id" {
-  value = "${aws_route_table.public.id}"
+  value = "${aws_route_table.public.*.id}"
 }

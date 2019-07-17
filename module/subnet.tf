@@ -5,12 +5,15 @@ resource "aws_subnet" "private" {
   count             = "${length(var.private_subnets)}"
 
   tags = "${
-  merge(${module.networking_labels.tags},
-  map(
-  "Name", "${module.networking_labels.id}${var.delimiter}${element(var.availability_zones, count.index)}",
-  "AZ", "${element(var.availability_zones, count.index)}",
-  "Type", "Private",
-  "Environment", "${var.stage}"))}"
+  merge(
+    module.networking_labels.tags,
+    map(
+      "Name", "${module.networking_labels.id}${var.delimiter}private${var.delimiter}${element(var.availability_zones, count.index)}",
+      "AZ", "${element(var.availability_zones, count.index)}",
+      "Type", "Private",
+      "Environment", "${var.stage}"
+    )
+  )}"
 }
 
 resource "aws_subnet" "public" {
@@ -21,17 +24,20 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = "${
-  merge(${module.networking_labels.tags},
-  map(
-  "Name", "${module.networking_labels.id}${var.delimiter}${element(var.availability_zones, count.index)}",
-  "AZ", "${element(var.availability_zones, count.index)}",
-  "Type", "Public",
-  "Environment", "${var.stage}"))}"
+  merge(
+    module.networking_labels.tags,
+    map(
+      "Name", "${module.networking_labels.id}${var.delimiter}public${var.delimiter}${element(var.availability_zones, count.index)}",
+      "AZ", "${element(var.availability_zones, count.index)}",
+      "Type", "Public",
+      "Environment", "${var.stage}"
+    )
+  )}"
 }
 
 resource "aws_db_subnet_group" "default" {
   description = "Default database subnet group for ${aws_vpc.vpc.id}"
-  subnet_ids  = ["${aws_subnet.private.*.id}"]
-  tags        = "${(map("Name", format("%s-default-db-subnet-group", var.name), "Environment", "${var.stage}"))}"
+  subnet_ids  = "${aws_subnet.private.*.id}"
+  tags        = "${merge(module.networking_labels.tags, map("Name", format("%s-default-db-subnet-group", module.networking_labels.id)))}"
 }
 

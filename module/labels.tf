@@ -7,6 +7,5 @@ module "networking_labels" {
   delimiter  = "${var.delimiter}"
   tags = {
     "Name"        = "${var.name}"
-    "Environment" = "${var.stage}"
   }
 }

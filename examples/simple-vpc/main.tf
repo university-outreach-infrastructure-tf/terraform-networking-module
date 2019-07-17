@@ -5,6 +5,7 @@ provider "aws" {
 }
 
 module "networking_setup" {
+    source             = "../../module/"
     namespace          = "ex"
     stage              = "test"
     attributes         = ["xyz"]
