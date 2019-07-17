@@ -18,7 +18,7 @@ variable "public_subnets" {
 
 variable "private_subnets" {
   description = "List of private subnets"
-  type        = "list"
+  type        = list
 }
 
 variable "use_nat_instances" {
@@ -37,7 +37,7 @@ variable "use_eip_with_nat_instances" {
 }
 
 variable "tags" {
-  type        = "map"
+  type        = map
   description = "A map of tags to add to all resources"
 }
 
@@ -68,11 +68,37 @@ variable "private_route_table_tags" {
 }
 
 variable "name" {
+  type        = string
   description = "Name tag, e.g stack"
+  default     = ""
 }
 
 variable "availability_zones" {
   description = "List of availability zones"
-  type        = "list"
-  default     = ["us-east-1a", "us-east-1b"]
+  type        = list
+  default     = [""]
+}
+
+variable "namespace" {
+  type        = string
+  description = "Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp'"
+  default     = ""
+}
+
+variable "stage" {
+  type        = string
+  description = "Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release'"
+  default     = ""
+}
+
+variable "attributes" {
+  type        = list
+  description = "Additional attributes (e.g. 1)"
+  default     = [""]
+}
+
+variable "delimiter" {
+  type        = string
+  description = "Delimiter to be used between namespace, environment, stage, name and attributes"
+  default     = ""
 }
