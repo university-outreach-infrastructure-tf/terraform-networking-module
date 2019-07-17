@@ -1,6 +1,14 @@
+## Public Route
 resource "aws_route_table" "public" {
   vpc_id = "${aws_vpc.vpc.id}"
-  tags = "${merge(var.public_route_table_tags, map("Name", format("%s-public-001", var.name), "Environment", "${var.stage}"))}"
+
+  tags = "${
+   merge(${module.networking_labels.tags},
+   map(
+   "Name", "${module.networking_labels.id}${var.delimiter}${element(var.availability_zones, count.index)}",
+   "AZ", "${element(var.availability_zones, count.index)}",
+   "Type", "Public",
+   "Environment", "${var.stage}"))}"
 }
 
 resource "aws_route" "public" {
@@ -10,10 +18,24 @@ resource "aws_route" "public" {
   depends_on               = ["aws_route_table.public"]
 }
 
+resource "aws_route_table_association" "public" {
+  count          = "${length(var.public_subnets)}"
+  subnet_id      = "${element(aws_subnet.public.*.id, count.index)}"
+  route_table_id = "${aws_route_table.public.id}"
+  depends_on     = ["aws_subnet.public", "aws_route_table.public"]
+}
+
+## Private Route
 resource "aws_route_table" "private" {
   count  = "${length(var.private_subnets)}"
   vpc_id = "${aws_vpc.vpc.id}"
-  tags   = "${merge(var.public_route_table_tags, map("Name", format("%s-private-%03d", var.name, count.index+1), "Environment", "${var.stage}"))}"
+  tags = "${
+   merge(${module.networking_labels.tags},
+   map(
+   "Name", "${module.networking_labels.id}${var.delimiter}${element(var.availability_zones, count.index)}",
+   "AZ", "${element(var.availability_zones, count.index)}",
+   "Type", "Private",
+   "Environment", "${var.stage}"))}"
 }
 
 resource "aws_route" "private" {
@@ -21,20 +43,12 @@ resource "aws_route" "private" {
   route_table_id         = "${element(aws_route_table.private.*.id, count.index)}"
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = "${element(aws_nat_gateway.main.*.id, count.index)}"
+  depends_on               = ["aws_route_table.private"]
 }
-
-/**
- * Route associations
- */
 
 resource "aws_route_table_association" "private" {
   count          = "${length(var.private_subnets)}"
   subnet_id      = "${element(aws_subnet.private.*.id, count.index)}"
   route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
-}
-
-resource "aws_route_table_association" "public" {
-  count          = "${length(var.public_subnets)}"
-  subnet_id      = "${element(aws_subnet.public.*.id, count.index)}"
-  route_table_id = "${aws_route_table.public.id}"
+  depends_on     = ["aws_subnet.private", "aws_route_table.private"]
 }
