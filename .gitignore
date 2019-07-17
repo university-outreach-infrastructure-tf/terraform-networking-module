@@ -1,7 +1,7 @@
 # Terraform
 .terraform/
 *.tfstate
-$.tfstate.backup
+*.tfstate.backup
 
 #Intellij
 .idea/
