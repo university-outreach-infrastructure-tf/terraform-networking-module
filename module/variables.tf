@@ -15,21 +15,6 @@ variable "private_subnets" {
   default     = []
 }
 
-variable "use_nat_instances" {
-  description = "If true, use EC2 NAT instances instead of the AWS NAT gateway service."
-  default     = false
-}
-
-variable "nat_instance_type" {
-  description = "Only if use_nat_instances is true, which EC2 instance type to use for the NAT instances."
-  default     = "t2.nano"
-}
-
-variable "use_eip_with_nat_instances" {
-  description = "Only if use_nat_instances is true, whether to assign Elastic IPs to the NAT instances. IF this is set to false, NAT instances use dynamically assigned IPs."
-  default     = false
-}
-
 variable "name" {
   type        = string
   description = "Name tag, e.g stack"
