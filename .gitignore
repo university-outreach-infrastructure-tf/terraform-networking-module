@@ -2,6 +2,7 @@
 .terraform/
 *.tfstate
 *.tfstate.backup
+versions.tf
 
 #Intellij
 .idea/
