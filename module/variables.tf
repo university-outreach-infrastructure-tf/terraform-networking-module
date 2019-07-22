@@ -1,11 +1,12 @@
 variable "cidr" {
   description = "The CIDR block for the VPC."
+  type        = string
   default     = ""
 }
 
 variable "public_subnets" {
   description = "List of public subnets"
-  type        = "list"
+  type        = list
   default     = []
 }
 
@@ -28,25 +29,25 @@ variable "availability_zones" {
 }
 
 variable "namespace" {
-  type        = string
   description = "Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp'"
+  type        = string
   default     = ""
 }
 
 variable "stage" {
-  type        = string
   description = "Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release'"
+  type        = string
   default     = ""
 }
 
 variable "attributes" {
-  type        = list
   description = "Additional attributes (e.g. 1)"
+  type        = list
   default     = []
 }
 
 variable "delimiter" {
-  type        = string
   description = "Delimiter to be used between namespace, environment, stage, name and attributes"
+  type        = string
   default     = ""
 }
