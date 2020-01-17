@@ -32,3 +32,11 @@ output "default_db_subnet_group" {
 output "public_rtb_id" {
   value = aws_route_table.public.*.id
 }
+
+output "nat_gw_id" {
+  value = aws_nat_gateway.main.*.id
+}
+
+output "nat_gw_eip" {
+  value = aws_eip.nat.*.public_ip
+}

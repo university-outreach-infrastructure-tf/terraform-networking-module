@@ -5,6 +5,7 @@ This module produces following resources:
 1. VPC
 2. Subnets in multiple AZs
 3. Internet Gateway
+4. NAT Gateway for Private Subnet
 4. Route Table, Route, Route Table Association
 
 Usage:
@@ -48,3 +49,5 @@ module "networking_setup" {
 | availability_zones      | List of availability zones of the VPC.      |
 | default_db_subnet_group | Default Subnet ID for Database              | 
 | public_rtb_id           | Public route table ID.                      | 
+| nat_gw_id               | NAT Gateway ID.                             | 
+| nat_gw_eip              | Public EIP of of NAT Gateway                | 
