@@ -18,8 +18,9 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_route_table" "private"{
+  count  = length(var.private_subnets)
   vpc_id = aws_vpc.vpc.id
-  tags   = merge( module.networking_labels.tags, { "Name"=  format("%s-private", module.networking_labels.id), "Type" = "Private", "Environment" = var.stage })
+  tags   = merge( module.networking_labels.tags, { "Name"=  format("%s-private-00%s", module.networking_labels.id, count.index), "Type" = "Private", "Environment" = var.stage })
 }
 
 resource "aws_route" "private" {
